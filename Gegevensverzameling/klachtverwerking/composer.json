@@ -1,0 +1,19 @@
+{
+    "name": "moham/klachtverwerking",
+    "autoload": {
+        "psr-4": {
+            "Moham\\Klachtverwerking\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Mo",
+            "email": "Mohamad-356125@hotmail.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^3.4",
+        "phpmailer/phpmailer": "^6.8",
+        "vlucas/phpdotenv": "^5.5"
+    }
+}

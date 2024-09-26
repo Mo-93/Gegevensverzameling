@@ -1,0 +1,26 @@
+body{
+
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    background-image: url(imag/);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+#resultaat{
+    border-radius: 2vw;
+    position: fixed;
+    text-align: center;
+    height: 65vh;
+    width: 40vw;
+    background-color: white;
+    border: 5px solid #0377ea;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: sans-serif;
+}
+
+

@@ -35,7 +35,7 @@ if ($result->num_rows > 0) {
 
 
     header('Content-Type: text/csv');
-    header('Content-Disposition: attachment; filename="gegevensverzameling1.csv"');
+    header('Content-Disposition: attachment; filename="gegevensbeheer.csv"');
 
 
     echo $csv;

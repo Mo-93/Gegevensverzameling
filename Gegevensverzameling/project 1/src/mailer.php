@@ -23,7 +23,7 @@ try {
     $mail->Port = $_ENV['SMTP_PORT'];
 
     // Recipients
-    $mail->setFrom($_ENV['moh301530@gmail.com'], 'Mohamad'); // Use your name or project name
+    $mail->setFrom($_ENV['moh301530@gmail.com'], 'Mohamad'); 
     $mail->addAddress('mohamad-h8@hotmail.com', 'Mohamad');
 
     // Email content

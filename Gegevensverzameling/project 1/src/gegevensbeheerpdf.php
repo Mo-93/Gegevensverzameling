@@ -4,6 +4,7 @@ ini_set("display_errors", 1);
 
 session_start();
 
+// Database connection
 $servername = "localhost";
 $username = "root";
 $password = "root";
@@ -15,10 +16,15 @@ if ($conn->connect_error) {
     die("Verbinding mislukt: " . $conn->connect_error);
 }
 
+require '../vendor/autoload.php'; // Adjust the path to your vendor folder
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+// Query to get all users
 $sql = "SELECT id, naam, email FROM gebruikers";
 $result = $conn->query($sql);
 
-// Aanpassen van gegevens
+// Handle Update
 if (isset($_POST['update'])) {
     $id = $_POST['id'];
     $naam = $_POST['naam'];
@@ -36,7 +42,7 @@ if (isset($_POST['update'])) {
     $stmt->close();
 }
 
-// Verwijderen van gegevens
+// Handle Delete
 if (isset($_POST['delete'])) {
     $id = $_POST['id'];
 
@@ -52,6 +58,85 @@ if (isset($_POST['delete'])) {
     $stmt->close();
 }
 
+// Handle PDF Generation
+if (isset($_POST['generate_pdf'])) {
+    $options = new Options();
+    $options->set('isHtml5ParserEnabled', true);
+    $options->set('isPhpEnabled', true);
+    $options->set('isRemoteEnabled', true);
+
+    $dompdf = new Dompdf($options);
+
+    // Start HTML for PDF
+    $html = '
+    <!DOCTYPE html>
+    <html lang="nl">
+    <head>
+        <meta charset="UTF-8">
+        <title>Gebruikersgegevens PDF</title>
+        <style>
+            h1 {
+                text-align: center;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            table, th, td {
+                border: 1px solid black;
+            }
+            th, td {
+                padding: 10px;
+                text-align: left;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Gebruikersgegevens</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Naam</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>';
+
+    // Fetch data from the database
+    $sql = "SELECT id, naam, email FROM gebruikers";
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows > 0) {
+        while($row = $result->fetch_assoc()) {
+            $html .= '<tr>';
+            $html .= '<td>' . $row["id"] . '</td>';
+            $html .= '<td>' . $row["naam"] . '</td>';
+            $html .= '<td>' . $row["email"] . '</td>';
+            $html .= '</tr>';
+        }
+    }
+
+    $html .= '
+            </tbody>
+        </table>
+    </body>
+    </html>';
+
+    // Load HTML into Dompdf
+    $dompdf->loadHtml($html);
+
+    // Set paper size
+    $dompdf->setPaper('A4', 'portrait');
+
+    // Render the PDF
+    $dompdf->render();
+
+    // Output the PDF (force download)
+    $dompdf->stream("gebruikersgegevens.pdf", ["Attachment" => 1]);
+    exit();
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +146,6 @@ if (isset($_POST['delete'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Gegevensbeheer</title>
-    <link rel="stylesheet" href="/HtmlenCss/styles.css">
 </head>
 <body>
     <header>
@@ -108,6 +192,11 @@ if (isset($_POST['delete'])) {
                 ?>
             </tbody>
         </table>
+
+        <!-- PDF Generation Button -->
+        <form method="post" action="">
+            <button type="submit" name="generate_pdf" class="btn btn-success">Genereer PDF</button>
+        </form>
     </main>
 
     <!-- Modal for Update -->
@@ -148,21 +237,13 @@ if (isset($_POST['delete'])) {
     <script>
     // Pass data to the modal
     var editModal = document.getElementById('editModal')
-    editModal.addEventListener('show.bs.modal', function (event) {
+    editModal.addEventListener('show.bs.modal'), function (event) {
         var button = event.relatedTarget
         var id = button.getAttribute('data-id')
         var naam = button.getAttribute('data-naam')
         var email = button.getAttribute('data-email')
 
         var modalId = editModal.querySelector('#modal-id')
-        var modalNaam = editModal.querySelector('#modal-naam')
-        var modalEmail = editModal.querySelector('#modal-email')
+        var modalNaam = editModal.querySelector('#modal-id')
 
-        modalId.value = id
-        modalNaam.value = naam
-        modalEmail.value = email
-    })
-    </script>
-
-    
-</body>
+    };

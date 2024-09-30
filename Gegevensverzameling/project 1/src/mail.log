@@ -1,0 +1,2 @@
+[2024-09-30 12:30:00] mail_log.INFO: Email sent successfully to klant.@gmail.com
+[2024-09-30 12:31:00] mail_log.ERROR: Message could not be sent. Mailer Error: SMTP connect() failed.

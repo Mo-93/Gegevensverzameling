@@ -12,8 +12,8 @@
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
     
-    <label for="naam">Naam:</label>
-    <input type="text" id="naam" name="naam" required>
+    <label for="name">Naam:</label>
+    <input type="text" id="name" name="name" required>
     
     <button type="submit">Send Email</button>
 </form>
